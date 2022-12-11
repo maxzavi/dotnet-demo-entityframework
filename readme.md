@@ -67,3 +67,11 @@ Add in .csproj xml autocopy
 Use por 80, swagger url http://localhost/swagger/index.html
 
 In mac, run docker with arg **--platform linux/amd64**
+
+* Use MySql Database
+
+Add package
+
+```cmd
+dotnet add wa-sample/wa-sample.csproj package MySql.EntityFrameworkCore
+```
