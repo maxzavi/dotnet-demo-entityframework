@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+#- task: DotNetCoreCLI@2
+#  displayName: 'Test project'
+#  inputs:
+#    command: 'test'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish..'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    arguments: '-c Release -o publish'
+    zipAfterPublish: false
+    modifyOutputPath: false
+- task: Docker@2
+  displayName: 'Build and Push docker image'
+  inputs:
+    containerRegistry: 'docker_registry'
+    repository: 'mzavaletav/demo-ef-inmemory'
+    command: 'buildAndPush'
+    Dockerfile: 'publish/Dockerfile'
+    addPipelineData: false
+    addBaseImageData: false
+    buildContext: 'publish'
