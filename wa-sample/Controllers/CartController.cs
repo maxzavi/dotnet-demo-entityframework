@@ -28,4 +28,9 @@ public class CartController: ControllerBase
         await context.SaveChangesAsync();
         return cart;
     } 
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Cart>> getById ([FromServices] DataContext context, int id){
+        var cart = await context.Carts.FindAsync(id);
+        return cart == null ? NotFound() : Ok(cart);
+    } 
 }
