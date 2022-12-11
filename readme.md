@@ -64,5 +64,6 @@ Add in .csproj xml autocopy
   </ItemGroup>
 ```
 
-use por 80, swagger url http://localhost/swagger/index.html
+Use por 80, swagger url http://localhost/swagger/index.html
 
+In mac, run docker with arg **--platform linux/amd64**
