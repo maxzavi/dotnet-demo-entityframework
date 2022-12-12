@@ -9,54 +9,50 @@ namespace wa_sample.Controllers;
 
 public class CartController : ControllerBase
 {
-
     private DataContext _context;
 
-    public CartController(DataContext dataContext)
+    public CartController([FromServices] DataContext dataContext)
     {
         _context = dataContext;
     }
-
     [HttpGet]
-    public async Task<ActionResult<List<Cart>>> getList([FromServices] DataContext context)
+    public async Task<ActionResult<List<Cart>>> getList()
     {
-        var carts = await context.Carts.ToListAsync();
+        var carts = await _context.Carts.ToListAsync();
         return carts;
     }
-
     [HttpPost]
-    public async Task<ActionResult<Cart>> post([FromServices] DataContext context, [FromBody] Cart cart)
+    public async Task<ActionResult<Cart>> post([FromBody] Cart cart)
     {
-        context.Carts.Add(cart);
-        await context.SaveChangesAsync();
+        _context.Carts.Add(cart);
+        await _context.SaveChangesAsync();
         return cart;
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Cart>> getById([FromServices] DataContext context, int id)
+    public async Task<ActionResult<Cart>> getById( int id)
     {
-        var cart = await context.Carts.FindAsync(id);
+        var cart = await _context.Carts.FindAsync(id);
         return cart == null ? NotFound() : Ok(cart);
     }
-
     [HttpPut("{id}")]
-    public async Task<ActionResult> put([FromServices] DataContext context, int id, [FromBody] Cart cart)
+    public async Task<ActionResult> put(int id, [FromBody] Cart cart)
     {
-        var cartExist = await context.Carts.FindAsync(id);
+        var cartExist = await _context.Carts.FindAsync(id);
         if (cartExist == null) return NotFound();
-        context.Entry(cartExist).State = EntityState.Detached;
+        _context.Entry(cartExist).State = EntityState.Detached;
 
         cart.Id = id;
-        context.Entry(cart).State = EntityState.Modified;
+        _context.Entry(cart).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return NoContent();
     }
     [HttpDelete("{id}")]
-    public async Task<ActionResult> delete([FromServices] DataContext context, int id)
+    public async Task<ActionResult> delete(int id)
     {
-        var cartExist = await context.Carts.FindAsync(id);
+        var cartExist = await _context.Carts.FindAsync(id);
         if (cartExist == null) return NotFound();
-        context.Carts.Remove(cartExist);
-        await context.SaveChangesAsync();
+        _context.Carts.Remove(cartExist);
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }
